@@ -5,7 +5,7 @@ const TOKEN = process.env.BOT_TOKEN;
 console.log(`Login with token ${TOKEN}`);
 
 const fs = require('fs');
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, Permissions } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
@@ -29,6 +29,25 @@ for(const file of commandFiles){
 
 console.log('done');
 
+client.on('messageCreate', (message) => {
+    if (message.author.bot) return;
+    if (!(message.content.startsWith('!'))) return;
+
+    switch(message.content){
+        case '!add':
+            const member = message.guild.members.cache.find(mem => mem.user.username === 'jaja blink')
+            console.log(member);
+            break;
+        case '!per':
+            let role = message.guild.roles.cache.find(role => role.name === 'addTest')
+            const perms = message.member.permissions.has('KICK_MEMBERS');
+    }
+
+    //let role = message.guild.roles.cache.find(role => role.name === 'addTest')
+    //message.member.roles.add(role)
+
+});
+
 client.once('ready', () => {
     console.log('Bot now ready');
 
@@ -49,6 +68,7 @@ client.once('ready', () => {
             if(error) console.error(error);
         }
     })();
+
 });
 
 
@@ -58,6 +78,8 @@ client.on('interactionCreate', async (interaction) => {
     const command = client.commands.get(interaction.commandName);
 
     if(!command) return;
+
+    console.log(`[${interaction.guild.name}(${interaction.member.displayName})]`);
 
     try {
         await command.execute(interaction);
