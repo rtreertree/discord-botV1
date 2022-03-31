@@ -1,14 +1,15 @@
 require('dotenv').config();
 
-const TOKEN = process.env.BOT_TOKEN;
+const TOKEN = process.env.BOT_EPIC;
 
 console.log(`Login with token ${TOKEN}`);
 
+const USE_ABLE = ['765105219729883158', '1234567890'];
+
 const fs = require('fs');
-const { Client, Intents, Collection, Permissions } = require('discord.js');
+const { Client, Intents, Collection } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-
 
 
 const client = new Client({
@@ -39,8 +40,23 @@ client.on('messageCreate', (message) => {
             console.log(member);
             break;
         case '!per':
-            let role = message.guild.roles.cache.find(role => role.name === 'addTest')
+            const role = message.guild.roles.cache.find(role => role.name === 'addTest');
             const perms = message.member.permissions.has('KICK_MEMBERS');
+            break;
+        case '!test':
+            const member1 = message.guild.members.cache.find(mem => mem.user.username === 'jaja blink');
+            const member2 = message.guild.members.cache.find(mem => mem.user.username === 'A penguin');
+            console.log(member1);
+            console.log(message.member.permissions.has('KICK_MEMBERS'));
+
+            //const permissions1 = member1.permissions.toArray();
+            const permissions2 = message.member.permissions.toArray();
+            
+            //console.log(permissions1.length);
+            //console.log(permissions2.length);
+
+            break;
+
     }
 
     //let role = message.guild.roles.cache.find(role => role.name === 'addTest')
@@ -73,11 +89,27 @@ client.once('ready', () => {
 
 
 client.on('interactionCreate', async (interaction) => {
+
+
+    if (interaction.isButton()){
+        interaction.reply('CLICK');
+    };
+
     if(!(interaction.isCommand())) return;
 
     const command = client.commands.get(interaction.commandName);
-
+ 
     if(!command) return;
+
+    let  user = interaction.member.id;
+
+    if(USE_ABLE.indexOf(user) === -1) {
+        interaction.reply({
+            content: 'FF DO NOT USE THIS COMMAND',
+            ephemeral: true
+        });
+        return;
+    }
 
     console.log(`[${interaction.guild.name}(${interaction.member.displayName})]`);
 

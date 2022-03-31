@@ -10,14 +10,15 @@ module.exports = {
         const member = interaction.options.getMember('target');
         const role = interaction.options.getRole('role');
 
-        if(!member.manageable || !role.editable || !interaction.member.roles.cache.some(role)) return interaction.reply({
+        if(!member.manageable || !role.editable || !member.roles.cache.find(r => r.name === role.name)) return interaction.reply({
             content: 'Can not remove role from this member',
             ephemeral: true
         });
 
-        member.roles.add(role);
+        console.log(member.roles.cache.find(r => r.name === role.name));
+        member.roles.remove(role);
         interaction.reply({
-            content: `Done to add role to ${member}`
+            content: `Remove role to ${member}`
         });
     }
 }   
